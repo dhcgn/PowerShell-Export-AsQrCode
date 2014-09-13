@@ -1,7 +1,7 @@
 PowerShell-Export-AsQrCode
 ==========================
 
-More information see wiki.
+More information see wiki https://github.com/dhcgn/PowerShell-Export-AsQrCode/wiki
 
 Simple Usage
 --------------
