@@ -9,9 +9,11 @@ Downloads: https://github.com/dhcgn/PowerShell-Export-AsQrCode/releases
 Installation
 --------------
 Move folder to:
-%USERPROFILE%\Documents\WindowsPowerShell\Modules
+
+    %USERPROFILE%\Documents\WindowsPowerShell\Modules
 
 Import module Export-AsQrCode
+
     PS C:\>  Import-Module Export-AsQrCode -Verbose
 
 Simple Usage
