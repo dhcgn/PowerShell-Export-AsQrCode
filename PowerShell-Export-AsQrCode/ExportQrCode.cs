@@ -13,8 +13,8 @@ using Gma.QrCodeNet.Encoding.Windows.Render;
 
 namespace PowerShell_ExportToQrCode
 {
-    [Cmdlet(VerbsData.Export, "AsQrCode")]
-    public class ExportAsQrCode : PSCmdlet, IDynamicParameters
+    [Cmdlet(VerbsData.Export, "QrCode")]
+    public class ExportQrCode : PSCmdlet, IDynamicParameters
     {
         private const string DarkBrush = "DarkBrush";
         private const string LightBrush = "LightBrush";
