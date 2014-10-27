@@ -1,4 +1,4 @@
-PowerShell-Export-AsQrCode
+PowerShell-Export-QrCode
 ==========================
 
 PowerShell Module to create QrCodes from text.
