@@ -1,4 +1,4 @@
-PowerShell-Export-AsQrCode
+PowerShell-Export-QrCode
 ==========================
 
 PowerShell Module to create QrCodes from text.
@@ -14,12 +14,12 @@ Move folder to:
 
 Import module Export-AsQrCode
 
-    PS C:\>  Import-Module Export-AsQrCode -Verbose
+    PS C:\>  Import-Module ExportQrCode -Verbose
 
 Simple Usage
 --------------
 
-    PS C:\> Export-AsQrCode Hallo
+    PS C:\> Export-QrCode Hallo
     C:\Users\User\Pictures\QrCodes\8b0e28a8-61e6-4406-ab7e-fba284c49f38.png
 
 Result: http://i.imgur.com/GtCLbdf.png
@@ -27,7 +27,7 @@ Result: http://i.imgur.com/GtCLbdf.png
 Full Usage
 --------------
 
-    PS C:\> Export-AsQrCode -Text Hallo -OutputPath C:\temp\QrCode.png `
+    PS C:\> Export-QrCode -Text Hallo -OutputPath C:\temp\QrCode.png `
     >>> -OpenWithShellExtension `
     >>> -ErrorCorrectionLevel H `
     >>> -ModuleSize 16 `
@@ -42,7 +42,7 @@ Supported colors: http://msdn.microsoft.com/de-de/library/aa358802%28vs.85%29.as
 Get-Help
 --------------
 
-    PS C:\> get-help Export-AsQrCode
+    PS C:\> get-help Export-QrCode
     
     NAME
         Export-AsQrCode
