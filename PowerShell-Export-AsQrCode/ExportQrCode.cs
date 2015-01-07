@@ -11,17 +11,18 @@ using System.Reflection;
 using Gma.QrCodeNet.Encoding;
 using Gma.QrCodeNet.Encoding.Windows.Render;
 
-namespace PowerShell_ExportToQrCode
+namespace ExportQrCode
 {
     [Cmdlet(VerbsData.Export, "QrCode")]
     public class ExportQrCode : PSCmdlet, IDynamicParameters
     {
         private const string DarkBrush = "DarkBrush";
         private const string LightBrush = "LightBrush";
-        private static RuntimeDefinedParameterDictionary _staticStroage;
-        private string _errorCorrectionLevel = "M";
-        private int _moduleSize = 2;
 
+        private static RuntimeDefinedParameterDictionary staticStorage;
+
+        private string errorCorrectionLevel = "M";
+        private int moduleSize = 2;
        
         #region Text
 
@@ -55,8 +56,6 @@ namespace PowerShell_ExportToQrCode
 
         #endregion
 
-      
-
         #region ErrorCorrectionLevel
         [Parameter(
             Mandatory = false,
@@ -65,13 +64,11 @@ namespace PowerShell_ExportToQrCode
         [ValidateSet(new[] {"L", "M", "Q", "H"}, IgnoreCase = true)]
         public string ErrorCorrectionLevel
         {
-            get { return _errorCorrectionLevel; }
-            set { _errorCorrectionLevel = value; }
+            get { return this.errorCorrectionLevel; }
+            set { this.errorCorrectionLevel = value; }
         }
 
         #endregion
-
-     
 
         #region ModuleSize
         [Parameter(
@@ -81,12 +78,11 @@ namespace PowerShell_ExportToQrCode
         [ValidateRange(2, 64)]
         public int ModuleSize
         {
-            get { return _moduleSize; }
-            set { _moduleSize = value; }
+            get { return this.moduleSize; }
+            set { this.moduleSize = value; }
         }
 
         #endregion
-
 
         public object GetDynamicParameters()
         {
@@ -104,20 +100,18 @@ namespace PowerShell_ExportToQrCode
 
             runtimeDefinedParameterDictionary.Add(DarkBrush, new RuntimeDefinedParameter(DarkBrush, typeof (string), attributes));
             runtimeDefinedParameterDictionary.Add(LightBrush, new RuntimeDefinedParameter(LightBrush, typeof (string), attributes));
-            _staticStroage = runtimeDefinedParameterDictionary;
+            staticStorage = runtimeDefinedParameterDictionary;
 
             return runtimeDefinedParameterDictionary;
         }
-
     
-
         protected override void BeginProcessing()
         {
-            if (String.IsNullOrWhiteSpace(OutputPath))
+            if (String.IsNullOrWhiteSpace(this.OutputPath))
             {
                 string outputPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "QrCodes", Guid.NewGuid() + ".png");
                 Directory.CreateDirectory(new FileInfo(outputPath).DirectoryName);
-                OutputPath = outputPath;
+                this.OutputPath = outputPath;
             }
 
             base.BeginProcessing();
@@ -126,31 +120,31 @@ namespace PowerShell_ExportToQrCode
         protected override void ProcessRecord()
         {
             ErrorCorrectionLevel errorCorrectionLevel;
-            Enum.TryParse(ErrorCorrectionLevel, true, out errorCorrectionLevel);
+            Enum.TryParse(this.ErrorCorrectionLevel, true, out errorCorrectionLevel);
             var encoder = new QrEncoder(errorCorrectionLevel);
 
             QrCode qrCode;
-            encoder.TryEncode(Text, out qrCode);
+            encoder.TryEncode(this.Text, out qrCode);
 
-            var gRenderer = new GraphicsRenderer(new FixedModuleSize(ModuleSize, QuietZoneModules.Two), GetBrush(DarkBrush), GetBrush(LightBrush));
+            var gRenderer = new GraphicsRenderer(new FixedModuleSize(this.ModuleSize, QuietZoneModules.Two), this.GetBrush(DarkBrush), this.GetBrush(LightBrush));
 
             var ms = new MemoryStream();
             gRenderer.WriteToStream(qrCode.Matrix, ImageFormat.Png, ms);
             byte[] data = ms.ToArray();
 
-            File.WriteAllBytes(OutputPath, data);
+            File.WriteAllBytes(this.OutputPath, data);
 
-            if (OpenWithShellExtension.ToBool())
+            if (this.OpenWithShellExtension.ToBool())
             {
-                Process.Start(OutputPath);
+                Process.Start(this.OutputPath);
             }
 
-            WriteObject(OutputPath);
+            this.WriteObject(this.OutputPath);
         }
 
         private Brush GetBrush(string runtimeDefinedParameter)
         {
-            KeyValuePair<string, RuntimeDefinedParameter> runtimeDefinedParameterTables = _staticStroage.FirstOrDefault(x => x.Key == runtimeDefinedParameter);
+            KeyValuePair<string, RuntimeDefinedParameter> runtimeDefinedParameterTables = staticStorage.FirstOrDefault(x => x.Key == runtimeDefinedParameter);
             if (runtimeDefinedParameterTables.Value == null) return runtimeDefinedParameter == LightBrush ? Brushes.White : Brushes.Black;
 
             var brushName = (string) (runtimeDefinedParameterTables.Value.Value);
